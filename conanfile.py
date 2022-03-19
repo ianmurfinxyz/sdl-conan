@@ -7,6 +7,7 @@ class SDLConan(ConanFile):
 	description = "Simple Direct Media Layer (SDL)"
 	homepage = "https://www.libsdl.org"
 	license = "Zlib https://www.libsdl.org/license.php"
+	url="https://github.com/ianmurfinxyz/sdl-conan"
 	settings = "os", "compiler", "arch", "build_type"
 	options = {"shared": [True, False]}
 	default_options = {"shared": False}
@@ -16,6 +17,8 @@ class SDLConan(ConanFile):
 	zip_name = f"{zip_folder_name}.tar.gz"
 	build_subfolder = "build"
 	source_subfolder = "source"
+	user = "ianmurfinxyz"
+	channel = "stable"
 
 	def source(self):
 		tools.get(f"https://libsdl.org/release/{self.zip_name}")
