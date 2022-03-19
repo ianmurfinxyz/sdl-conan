@@ -2,12 +2,14 @@ from conans import ConanFile, CMake, tools
 import os
 
 class SDLConan(ConanFile):
-	name = "sdl2"
+	name = "sdl"
 	version = "2.0.20"
 	description = "Simple Direct Media Layer (SDL)"
 	homepage = "https://www.libsdl.org"
 	license = "Zlib https://www.libsdl.org/license.php"
-	settings = "os", "compiler", "arch"
+	settings = "os", "compiler", "arch", "build_type"
+	options = {"shared": [True, False]}
+	default_options = {"shared": False}
 	generators = "cmake"
 	exports_sources = ["CMakeLists.txt"]
 	zip_folder_name = f"SDL2-{version}"
@@ -23,3 +25,35 @@ class SDLConan(ConanFile):
 		cmake = CMake(self)
 		cmake.configure(build_folder=self.build_subfolder)
 		cmake.build()
+
+	def package(self):
+		self.copy("*.h", src=f"{self.source_subfolder}/include", dst="include")
+		self.copy("*.lib", dst="lib", keep_path=False)
+		self.copy("*.a", dst="lib", keep_path=False)
+		self.copy("*.pdb", dst="lib", keep_path=False)
+		self.copy("*.exp", dst="lib", keep_path=False)
+		self.copy("*.dll", dst="bin",keep_path=False)
+		self.copy("*.so", dst="bin", keep_path=False)
+		self.copy("*.pdb", dst="bin", keep_path=False)
+
+	def package_info(self):
+		self.cpp_info.includedirs = ['include']
+		
+		build_type = self.settings.get_safe("build_type", default="Release")
+		postfix = "d" if build_type == "Debug" else ""
+		
+		if self.settings.os == "Windows":
+			static = "-static" if self.options.shared else ""
+			self.cpp_info.libs = [
+				f"SDL2{static}{postfix}.lib",
+				f"SDL2main{static}{postfix}.lib"
+			]
+		elif self.settings.os == "Linux":
+			extension = "so" if self.options.shared else "a"
+			self.cpp_info.libs = [
+				f"SDL2{static}{postfix}.{extension}",
+				f"SDL2main{static}{postfix}.{extension}"
+			]
+		
+		self.cpp_info.libdirs = ['lib']
+		self.cpp_info.bindirs = ['bin']
