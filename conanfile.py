@@ -40,8 +40,6 @@ class SDLConan(ConanFile):
 		self.copy("*.pdb", dst="bin", keep_path=False)
 
 	def package_info(self):
-		self.cpp_info.includedirs = ['include']
-		
 		build_type = self.settings.get_safe("build_type", default="Release")
 		postfix = "d" if build_type == "Debug" else ""
 		
@@ -58,5 +56,6 @@ class SDLConan(ConanFile):
 				f"SDL2main{static}{postfix}.{extension}"
 			]
 		
+		self.cpp_info.includedirs = ['include']
 		self.cpp_info.libdirs = ['lib']
 		self.cpp_info.bindirs = ['bin']
