@@ -33,7 +33,6 @@ class SDLConan(ConanFile):
 		self.copy("*.h", src=f"{self.source_subfolder}/include", dst="include")
 		self.copy("*.lib", dst="lib", keep_path=False)
 		self.copy("*.a", dst="lib", keep_path=False)
-		self.copy("*.pdb", dst="lib", keep_path=False)
 		self.copy("*.exp", dst="lib", keep_path=False)
 		self.copy("*.dll", dst="bin",keep_path=False)
 		self.copy("*.so", dst="bin", keep_path=False)
